@@ -21,7 +21,7 @@ setStockcol(NULL)                       #set up of color palette for better visu
 setStockcol(paste0(getStockcol(), 70))
 
 #save the reduction and clustering method available from pRoloc package
-reducmeth <- c("PCA", "MDS", "kpca", "nipals", "t-SNE", "lda")
+reducmeth <- c("PCA", "MDS", "kpca", "nipals", "t-SNE", "lda", "umap")
 Clusmeth <- c("knn", "svm", "ksvm", "naiveBayes", "rf", "nnet", "perTurbo", "tagm.mcmc.allocation")
 
 library(shiny)
@@ -53,15 +53,15 @@ ui <- dashboardPage(
              conditionalPanel(condition = "input.Redmet == 'PCA' ",
                               checkboxInput("paret", label = "Visualise the pareto diagramm from the PCA", value = FALSE)
                               ),
-             conditionalPanel(condition = "input.Redmet == 't-SNE' ",
+             conditionalPanel(condition = "input.Redmet == 't-SNE' | input.Redmet == 'umap' ",
                               numericInput("yseed", label = "Choose the seed for the stochastic calculation", value = 500)
                               ),
 
              #the axes on which we can see the plot depends on the reduction method
-             conditionalPanel(condition = "input.Redmet != 'MDS' ",
-                              numericInput("axe1", label = h4("Choose the first axe to visualise the PCA"),
+             conditionalPanel(condition = "input.Redmet != 'MDS' | input.Redmet != 'umap' ",
+                              numericInput("axe1", label = h4("Choose the first axe to visualise the plot"),
                                            value = 1, min = 1),
-                              numericInput("axe2", label = h4("Choose the second axe to visualise the PCA"),
+                              numericInput("axe2", label = h4("Choose the second axe to visualise the plot"),
                                            value = 2, min = 1))),
 
     menuItem("Clustering method", tabName = "Cmeth", icon = icon("object-group"),
@@ -546,7 +546,8 @@ server <- function(input, output, session){
 
       g <- AllDatavisuInt(data_marker(), redmet = input$Redmet, cmet = "markers", unknow = TRUE, Interact = TRUE,
                      highpr = pr, highcond = cd, vect = vc, proteins = prt, Mean_point = input$Mean,
-                     Title = input$text2, yourseed = input$yseed, ax = c(input$axe1, input$axe2))
+                     Title = input$text2, yourseed = input$yseed, ax = c(input$axe1, input$axe2),
+                     mysubtitle = TRUE, subtitle = input$datapack)
     }
     else {
        g <- NULL
@@ -594,7 +595,8 @@ server <- function(input, output, session){
 
       g <- AllDatavisuInt(data_marker(), redmet = input$Redmet, cmet = "markers", unknow = TRUE, Interact = FALSE,
                           highpr = pr, highcond = cd, vect = vc, proteins = prt, Mean_point = input$Mean,
-                          Title = input$text2, yourseed = input$yseed, ax = c(input$axe1, input$axe2))
+                          Title = input$text2, yourseed = input$yseed, ax = c(input$axe1, input$axe2),
+                          mysubtitle = TRUE, subtitle = input$datapack)
 
     }
 
@@ -674,7 +676,8 @@ server <- function(input, output, session){
 
       g1 <- AllDatavisuInt(data_markerfc(), redmet = input$Redmet, cmet = input$Cmet, unknow = TRUE, Interact = TRUE,
                           highpr = pr, highcond = cd, vect = vc, proteins = prt, Mean_point = input$Mean,
-                          Title = input$text2, yourseed = input$yseed, ax = c(input$axe1, input$axe2), Source = "BB")
+                          Title = input$text2, yourseed = input$yseed, ax = c(input$axe1, input$axe2), Source = "BB",
+                          mysubtitle = TRUE, subtitle = input$datapack)
     }
 
     g1
@@ -718,7 +721,8 @@ server <- function(input, output, session){
 
     g1 <- AllDatavisuInt(data_markerfc(), redmet = input$Redmet, cmet = input$Cmet, unknow = TRUE, Interact = FALSE,
                         highpr = pr, highcond = cd, vect = vc, proteins = prt, Mean_point = input$Mean,
-                        Title = input$text2, yourseed = input$yseed, ax = c(input$axe1, input$axe2), Source = "BB")
+                        Title = input$text2, yourseed = input$yseed, ax = c(input$axe1, input$axe2), Source = "BB",
+                        mysubtitle = TRUE, subtitle = input$datapack)
     }
 
     g1
