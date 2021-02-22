@@ -14,5 +14,5 @@ Depends:
     R (>= 2.10)
 Imports: MSnbase, pRoloc, ggplot2, plotly, matlab, FactoMineR, pRolocdata, stringr, tidyverse,
    factoextra, grid, gridExtra, ggpubr, gghighlight, grDevices, graphics, stats, RColorBrewer, 
-   shiny, shinydashboard, shinycssloaders, shinybusy, dplyr, Rtsne, tidyr
+   shiny, shinydashboard, shinycssloaders, shinybusy, dplyr, Rtsne, tidyr, uwot
    
