@@ -11,7 +11,7 @@
 #' This function was mainly created for shiny purpose. (for example run \code{rnShinyVisualization})
 #'
 #' @param object2 A \code{\link{MSnSet}} object
-#' @param redmet The reduction method from the pRoloc package : "PCA", "t-SNE", "MDS", "nipals", "lda", "kpca".
+#' @param redmet The reduction method from the pRoloc package : "PCA", "t-SNE", "MDS", "nipals", "lda", "kpca", and "umap".
 #' @param cmet the name of the column of your data which contains the markers, if it contains "unknown" assignment, please precise unknow = TRUE
 #' @param ax A numeric vector of length two, you can choose on which axes you want to see the plot.
 #' (depend of the number of fraction of the data)
@@ -33,6 +33,8 @@
 #' @param expor.pdf A logical argument to export the figure in a pdf file
 #' @param yourseed An integer for the t-SNE algorithm in order to having same plot if there is several
 #' @param Source A character specifying the source of the plotly graph (use when Interact = TRUE)
+#' @param mysubtitle A logical argument to tell if you want to put your own subtitle
+#' @param subtitle A character vector which is your subtitle
 #'
 #' @return A figure showing your data, depending of your chosen parameters
 #'
@@ -48,14 +50,24 @@ AllDatavisuInt <- function(object2, redmet = "PCA", cmet = "svm", ax = c(1,2), I
                         Title = "Cellular map", name_cond = "cond", Mean_point = FALSE,
                         highpr = FALSE, proteins = c("PKN2", "GRB2", "SHC1", "EGFR"),
                         vect = FALSE, unknow = FALSE, highcond = FALSE, Condition = 1,
-                        expor.png = FALSE, expor.pdf = FALSE, yourseed = 500, Source = "AA"){
+                        expor.png = FALSE, expor.pdf = FALSE, yourseed = 500, Source = "AA",
+                        mysubtitle = FALSE, subtitle = ""){
 
   set.seed(yourseed) #set the seed for the t-SNE
 
   print("1. Create the data plot")
-  p2 <- pRoloc::plot2D(object2, fcol = cmet, method = redmet, plot = FALSE,  #get the data from the plot2D function of pRoloc package (see documentation of pRoloc)
-                       dims = ax)
-  p2 <- as.data.frame(p2)
+  if (redmet == "umap"){
+    p2 <- umap(exprs(object2))
+    p2 <- as.data.frame(p2)
+    rownames(p2) <- rownames(exprs(object2))
+    colnames(p2) <- c("Dimension 1", "Dimension 2")
+  }
+  else{
+    p2 <- pRoloc::plot2D(object2, fcol = cmet, method = redmet, plot = FALSE,  #get the data from the plot2D function of pRoloc package (see documentation of pRoloc)
+                         dims = ax)
+    p2 <- as.data.frame(p2)
+  }
+
   axname <- colnames(p2)  #save the names of the axes
 
 
@@ -141,6 +153,11 @@ AllDatavisuInt <- function(object2, redmet = "PCA", cmet = "svm", ax = c(1,2), I
     ggplot2::guides(alpha = FALSE, size = FALSE)
 
 
+  if (mysubtitle == TRUE) {
+    sub <- subtitle
+  }
+  else
+    sub <- deparse(substitute(object2))
 
 
   print("4. Building the plot(s)")
@@ -148,7 +165,7 @@ AllDatavisuInt <- function(object2, redmet = "PCA", cmet = "svm", ax = c(1,2), I
     if (highpr == FALSE & vect == FALSE  & highcond == FALSE){ #creating the plot according to the number of condition, then highlight the condition
 
       if (unknow == FALSE){
-        graph1a <- ggpubr::ggpar(grap2, main = Title, subtitle = paste("data :", deparse(substitute(object2)), redmet),
+        graph1a <- ggpubr::ggpar(grap2, main = Title, subtitle = paste("data :", sub, redmet),
                                  legend.title = "Organelles", legend.position = "top",
                                  ggtheme = ggplot2::theme_minimal(), xlab = axname[1], ylab = axname[2],
                                  caption = capt) +
@@ -158,7 +175,7 @@ AllDatavisuInt <- function(object2, redmet = "PCA", cmet = "svm", ax = c(1,2), I
 
 
       else {
-        graph1a <- ggpubr::ggpar(grap2, main = Title, subtitle = paste("data :", deparse(substitute(object2)), redmet),
+        graph1a <- ggpubr::ggpar(grap2, main = Title, subtitle = paste("data :", sub, redmet),
                                  legend.title = "Organelles", legend.position = "top",
                                  ggtheme = ggplot2::theme_minimal(), xlab = axname[1], ylab = axname[2]) +
           ggplot2::guides(fill = ggplot2::guide_legend(override.aes =  list(size = 6)), size = FALSE) +
@@ -170,7 +187,7 @@ AllDatavisuInt <- function(object2, redmet = "PCA", cmet = "svm", ax = c(1,2), I
     if (highpr == FALSE & vect == FALSE  & highcond == TRUE){ #creating the plot according to the number of condition, then highlight the condition
 
       if (unknow == FALSE) {
-        graph1a <- ggpubr::ggpar(grap2, main = Title, subtitle = paste("data :", deparse(substitute(object2)), redmet),
+        graph1a <- ggpubr::ggpar(grap2, main = Title, subtitle = paste("data :", sub, redmet),
                                  legend.title = "Organelles", legend.position = "top",
                                  ggtheme = ggplot2::theme_minimal(), xlab = axname[1], ylab = axname[2],
                                  caption = capt) +
@@ -181,7 +198,7 @@ AllDatavisuInt <- function(object2, redmet = "PCA", cmet = "svm", ax = c(1,2), I
       }
 
       else {
-        graph1a <- ggpubr::ggpar(grap2, main = Title, subtitle = paste("data :", deparse(substitute(object2)), redmet),
+        graph1a <- ggpubr::ggpar(grap2, main = Title, subtitle = paste("data :", sub, redmet),
                                  legend.title = "Organelles", legend.position = "top",
                                  ggtheme = ggplot2::theme_minimal(), xlab = axname[1], ylab = axname[2]) +
           gghighlight::gghighlight(p2$cond == Condition, use_direct_label = FALSE,
@@ -197,7 +214,7 @@ AllDatavisuInt <- function(object2, redmet = "PCA", cmet = "svm", ax = c(1,2), I
     if (highpr == TRUE & vect == FALSE & highcond == FALSE){ #same thing as before but with highlighting sepecifics proteins
 
       if (unknow == FALSE) {
-        graph1a <- ggpubr::ggpar(grap2, main = Title, subtitle = paste("data :", deparse(substitute(object2)), redmet),
+        graph1a <- ggpubr::ggpar(grap2, main = Title, subtitle = paste("data :", sub, redmet),
                                  legend.title = "Organelles", legend.position = "top",
                                  ggtheme = ggplot2::theme_minimal(), xlab = axname[1], ylab = axname[2],
                                  caption = capt) +
@@ -211,7 +228,7 @@ AllDatavisuInt <- function(object2, redmet = "PCA", cmet = "svm", ax = c(1,2), I
       }
 
       else {
-        graph1a <- ggpubr::ggpar(grap2, main = Title, subtitle = paste("data :", deparse(substitute(object2)), redmet),
+        graph1a <- ggpubr::ggpar(grap2, main = Title, subtitle = paste("data :", sub, redmet),
                                  legend.title = "Organelles", legend.position = "top",
                                  ggtheme = ggplot2::theme_minimal(), xlab = axname[1], ylab = axname[2],
                                  caption = capt) +
@@ -252,7 +269,7 @@ AllDatavisuInt <- function(object2, redmet = "PCA", cmet = "svm", ax = c(1,2), I
 
       #creation of the plot : highlight the specifics proteins we chosen + the vectors showing their shifting
       if (unknow == FALSE) {
-        graph1a <- ggpubr::ggpar(grap2, main = Title, subtitle = paste("data :", deparse(substitute(object2)), redmet),
+        graph1a <- ggpubr::ggpar(grap2, main = Title, subtitle = paste("data :", sub, redmet),
                                  legend.title = "Organelles", legend.position = "top",
                                  ggtheme = ggplot2::theme_minimal(), xlab = axname[1], ylab = axname[2],
                                  caption = capt) +
@@ -270,7 +287,7 @@ AllDatavisuInt <- function(object2, redmet = "PCA", cmet = "svm", ax = c(1,2), I
       }
 
       else {
-        graph1a <- ggpubr::ggpar(grap2, main = Title, subtitle = paste("data :", deparse(substitute(object2)), redmet),
+        graph1a <- ggpubr::ggpar(grap2, main = Title, subtitle = paste("data :", sub, redmet),
                                  legend.title = "Organelles", legend.position = "top",
                                  ggtheme = ggplot2::theme_minimal(), xlab = axname[1], ylab = axname[2],
                                  caption = capt) +
@@ -369,7 +386,7 @@ AllDatavisuInt <- function(object2, redmet = "PCA", cmet = "svm", ax = c(1,2), I
     }
 
     if (unknow) {
-      graph1a <- ggpubr::ggpar(graph1a, main = Title, subtitle = paste("data :", deparse(substitute(object2)), redmet),
+      graph1a <- ggpubr::ggpar(graph1a, main = Title, subtitle = paste("data :", sub, redmet),
                                legend.title = "Organelles", legend.position = "top",
                                ggtheme = ggplot2::theme_minimal(), xlab = axname[1], ylab = axname[2],
                                caption = capt) +
@@ -378,7 +395,7 @@ AllDatavisuInt <- function(object2, redmet = "PCA", cmet = "svm", ax = c(1,2), I
         ggplot2::guides(fill = ggplot2::guide_legend(override.aes = list(size = 5))) #keep the legend
     }
     else {
-      graph1a <- ggpubr::ggpar(graph1a, main = Title, subtitle = paste("data :", deparse(substitute(object2)), redmet),
+      graph1a <- ggpubr::ggpar(graph1a, main = Title, subtitle = paste("data :", sub, redmet),
                                legend.title = "Organelles", legend.position = "top",
                                ggtheme = ggplot2::theme_minimal(), xlab = axname[1], ylab = axname[2],
                                caption = capt) +
@@ -397,7 +414,7 @@ AllDatavisuInt <- function(object2, redmet = "PCA", cmet = "svm", ax = c(1,2), I
 
 
   if (Interact){
-    Subt <- deparse(substitute(object2))
+    Subt <- sub
     if (vect){
       graph1a <- plotly::ggplotly(graph1a, tooltip = c("fill", "key"), dynamicTicks = TRUE, source = Source) %>%
         plotly::layout(hovermode = "closest", clickmode = "event+select", dragmode = "select",
@@ -468,10 +485,10 @@ AllDatavisuInt <- function(object2, redmet = "PCA", cmet = "svm", ax = c(1,2), I
     print("Building the final plot")
 
     if (expor.png == TRUE){ #export the figure in png or pdf format
-      ggplot2::ggsave(paste0(deparse(substitute(object2)), "_", redmet, "_map.png"), plot = graph1a, width = 2000/72, height = 1000/72)
+      ggplot2::ggsave(paste0(sub, "_", redmet, "_map.png"), plot = graph1a, width = 2000/72, height = 1000/72)
     }
     if (expor.pdf == TRUE){
-      ggplot2::ggsave(paste0(deparse(substitute(object2)), "_", redmet, "_map.pdf"), plot =graph1a, width = 2000/72, height = 1000/72)
+      ggplot2::ggsave(paste0(sub, "_", redmet, "_map.pdf"), plot =graph1a, width = 2000/72, height = 1000/72)
     }
 
     return(graph1a)   #return the figure
