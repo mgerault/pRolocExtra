@@ -58,7 +58,7 @@ ui <- dashboardPage(
                               ),
 
              #the axes on which we can see the plot depends on the reduction method
-             conditionalPanel(condition = "input.Redmet != 'MDS' | input.Redmet != 'umap' ",
+             conditionalPanel(condition = "input.Redmet != 'MDS' & input.Redmet != 'umap' ",
                               numericInput("axe1", label = h4("Choose the first axe to visualise the plot"),
                                            value = 1, min = 1),
                               numericInput("axe2", label = h4("Choose the second axe to visualise the plot"),
