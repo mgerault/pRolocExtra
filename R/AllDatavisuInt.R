@@ -251,10 +251,7 @@ AllDatavisuInt <- function(object2, redmet = "PCA", cmet = "svm", ax = c(1,2), I
 
       try(if(is.null(MSnbase::fData(object2)[[name_cond]])) stop("Your data doesn't contain a condition columns"))
 
-      p2_f <- p2 %>% #filter the proteins we selected
-        group_by(unprot) %>%
-        filter(!is.na(match(unprot, proteins))) %>%
-        ungroup()
+      p2_f <- p2[which(!is.na(match(p2$unprot, proteins))),]
 
       #creation of a data.frame which contains the coordinates from each proteins
       p2_f1 <- p2_f[,c("Dim1", "Dim2", "cond")]
@@ -354,10 +351,7 @@ AllDatavisuInt <- function(object2, redmet = "PCA", cmet = "svm", ax = c(1,2), I
 
       try(if(is.null(MSnbase::fData(object2)[[name_cond]])) stop("Your data doesn't contain a condition columns"))
 
-      p2_f <- p2 %>% #filter the proteins we selected
-        group_by(unprot) %>%
-        filter(!is.na(match(unprot, proteins))) %>%
-        ungroup()
+      p2_f <- p2[which(!is.na(match(p2$unprot, proteins))),]
 
       #creation of a data.frame which contains the coordinates from each proteins
       p2_f1 <- p2_f[,c("Dim1", "Dim2", "cond")]
