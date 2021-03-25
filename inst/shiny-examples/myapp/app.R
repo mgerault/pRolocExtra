@@ -40,7 +40,7 @@ ui <- dashboardPage(
   #the side bar
   dashboardSidebar(
     width = 350,
-    fluidRow(fileInput("file", label= h3("Select a File for your analysis (not yet implemednted"), accept=NULL)),
+    fluidRow(fileInput("file", label= h3("Select a File for your analysis (not yet implemented"), accept=NULL)),
     menuItem("Data", tabName = "data", icon = icon("database"),
              selectInput("datapack", label = h3("Select data from the package pRolocdata to visualise"),
                          choices = alldatapRoloc,
@@ -143,7 +143,7 @@ ui <- dashboardPage(
                                                                    selected = 1)
                                                        ),
                                       conditionalPanel(condition = "input.hili_all == 3",
-                                                       selectInput("uniprot",
+                                                       selectizeInput("uniprot",
                                                                    label = "Choose a protein from all condtions to highlight",
                                                                    choices = unique(fData(alldyn)$gene_name), multiple = TRUE,
                                                                    selected = unique(fData(alldyn)$gene_name)[1])
