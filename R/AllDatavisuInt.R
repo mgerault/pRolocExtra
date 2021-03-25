@@ -335,10 +335,7 @@ AllDatavisuInt <- function(object2, redmet = "PCA", cmet = "svm", ax = c(1,2), I
 
     if (highpr == TRUE & vect == FALSE & highcond == FALSE){ #same thing as before but with highlighting sepecifics proteins
 
-      p2_filtered <- p2 %>%
-        group_by(prot) %>%
-        filter(!is.na(match(prot, proteins))) %>%
-        ungroup()
+      p2_filtered <- p2[proteins,]
 
         graph1a <- ggplot2::ggplot(p2_filtered) +
           ggplot2::geom_point(aes(x=Dim1, y=Dim2, fill = markers,
