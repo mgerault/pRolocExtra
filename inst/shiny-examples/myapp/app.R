@@ -674,7 +674,7 @@ server <- function(input, output, session){
       }
 
 
-      g1 <- AllDatavisuInt(data_markerfc(), redmet = input$Redmet, cmet = input$Cmet, unknow = TRUE, Interact = TRUE,
+      g1 <- AllDatavisuInt(data_markerfc(), redmet = input$Redmet, cmet = input$Cmet, Interact = TRUE,
                           highpr = pr, highcond = cd, vect = vc, proteins = prt, Mean_point = input$Mean,
                           Title = input$text2, yourseed = input$yseed, ax = c(input$axe1, input$axe2), Source = "BB",
                           mysubtitle = TRUE, subtitle = input$datapack)
@@ -719,7 +719,7 @@ server <- function(input, output, session){
     }
 
 
-    g1 <- AllDatavisuInt(data_markerfc(), redmet = input$Redmet, cmet = input$Cmet, unknow = TRUE, Interact = FALSE,
+    g1 <- AllDatavisuInt(data_markerfc(), redmet = input$Redmet, cmet = input$Cmet, Interact = FALSE,
                         highpr = pr, highcond = cd, vect = vc, proteins = prt, Mean_point = input$Mean,
                         Title = input$text2, yourseed = input$yseed, ax = c(input$axe1, input$axe2), Source = "BB",
                         mysubtitle = TRUE, subtitle = input$datapack)
