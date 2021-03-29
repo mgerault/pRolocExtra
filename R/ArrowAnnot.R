@@ -10,13 +10,15 @@
 #' @param data is a data.frame of four columns, containing the coordinates
 #'  of the depart point (xd, yd) and the arrival point (xe, ye)
 #'  of each vector you want to print (at least one)
+#' @param d A numeric parameter corresponding to the Startstandoff parameter;
+#'  allow to display the arrow with a specific length
 #'
 #' @return a list of list containing the parameter for the layout function
 #'
 #' @seealso \code{\link{ggplotly}} and \code{\link{layout}}
 #'
 #' @export
-ArrowAnnot <- function(data){
+ArrowAnnot <- function(data, d = 10){
   n <- nrow(data)  #the number of vector
   whole_list <- list()
   for (i in 1:n){
@@ -29,7 +31,7 @@ ArrowAnnot <- function(data){
                                                yref = "y",
                                                arrowsize = 2,
                                                arrowhead =4,
-                                               startstandoff = 10*Start,
+                                               startstandoff = d*Start,
                                                ax=data$xd[i],
                                                ay=data$yd[i],
                                                axref="x",
