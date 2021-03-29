@@ -10,6 +10,7 @@ library(tidyverse)
 library(RColorBrewer)
 library(MSnbase)
 library(pRoloc)
+library(uwot)
 
 #this app still needs some improvement : some warnings, use more synthetic code, espacially in the map part
 #I still need to put my function on this part (implement plotly in Alldatavisu or in another function)
@@ -371,7 +372,13 @@ server <- function(input, output, session){
   #plot the box plot when data from Borner and al. are selected, with BoxProfile function
   output$Dyn_profile <- renderPlot({
     if (input$dyn_prof == TRUE){
-      BoxProfile(data_marker(), prot = input$Prot_Profi)$graph
+      if (input$clus_prof){
+        BoxProfile(data_markerfc(), prot = input$Prot_Profi, tit = input$datapack, cmet = input$Cmet)$graph
+      }
+      else{
+        BoxProfile(data_marker(), prot = input$Prot_Profi, tit = input$datapack)$graph
+      }
+
     }
     else
       NULL
