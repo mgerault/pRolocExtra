@@ -85,10 +85,18 @@ ui <- dashboardPage(
                                conditionalPanel(condition = "input.inter_prof == true",
                                                 withSpinner(plotlyOutput(outputId="int_prof_a"), type =6)),
 
-                               conditionalPanel(condition = "input.One_pr_pf == false",  uiOutput("organ")),
+                               conditionalPanel(condition = "input.One_pr_pf == false & input.all_prof == false",  uiOutput("organ")),
                                checkboxInput("clus_prof",
                                              label = "Visualise the proteins profiles with their new assignation", value = FALSE),
-                               checkboxInput("One_pr_pf", label = "Visualise profile from spefics proteins", value = FALSE),
+                               conditionalPanel(condition = "input.One_pr_pf == false",
+                                                checkboxInput("mean_prof",
+                                                              label = "Visualise the mean profiles", value = FALSE)),
+                               conditionalPanel(condition = "input.mean_prof == true",
+                                                checkboxInput("all_prof",
+                                                              label = "Visualise all the mean profiles", value = FALSE),),
+                               conditionalPanel(condition = "input.mean_prof == false",
+                                                checkboxInput("One_pr_pf", label = "Visualise profile from spefics proteins",
+                                                              value = FALSE)),
                                conditionalPanel(condition = "input.One_pr_pf == true", uiOutput("prot_for_pf")),
 
                                #including specific options fro data from Borner and al.
@@ -187,6 +195,16 @@ server <- function(input, output, session){
   data_marker <- reactive({get(input$datapack)})
 
   #update the ui depending on the data that are selected
+  observe({
+    if (!input$mean_prof){
+      updateCheckboxInput(session, "all_prof", value = FALSE)
+    }
+  })
+  observe({
+    if (input$One_pr_pf){
+      updateCheckboxInput(session, "mean_prof", value = FALSE)
+    }
+  })
 
   observe({
     if (input$datapack == "alldyn" | input$datapack == "alldyn_two" | input$datapack == "alldyn_mean"){
@@ -271,7 +289,7 @@ server <- function(input, output, session){
 
           else {
             ProfileInteract(data_markerfc(), mrk = input$Cmet, Organelle = input$organe, Interact = FALSE,
-                            Clust = TRUE, mytitle = TRUE, TITLE = input$datapack)
+                            Clust = TRUE, mytitle = TRUE, TITLE = input$datapack, mean_prof = input$mean_prof, one_pr = input$all_prof)
           }
 
         }
@@ -282,7 +300,7 @@ server <- function(input, output, session){
           }
           else {
             ProfileInteract(data_marker(), Organelle = input$organe, Interact = FALSE,
-                            mytitle = TRUE, TITLE = input$datapack)
+                            mytitle = TRUE, TITLE = input$datapack, mean_prof = input$mean_prof, one_pr = input$all_prof)
           }
         }
 
@@ -306,7 +324,7 @@ server <- function(input, output, session){
 
         else {
           ProfileInteract(data_markerfc(), mrk = input$Cmet, Organelle = input$organe, Clust = TRUE,
-                          mytitle = TRUE, TITLE = input$datapack)
+                          mytitle = TRUE, TITLE = input$datapack, mean_prof = input$mean_prof, one_pr = input$all_prof)
         }
       }
       else {
@@ -316,7 +334,8 @@ server <- function(input, output, session){
         }
 
         else {
-          ProfileInteract(data_marker(), Organelle = input$organe, mytitle = TRUE, TITLE = input$datapack)
+          ProfileInteract(data_marker(), Organelle = input$organe, mytitle = TRUE, TITLE = input$datapack,
+                          mean_prof = input$mean_prof, one_pr = input$all_prof)
         }
 
       }
