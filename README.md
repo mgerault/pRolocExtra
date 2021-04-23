@@ -4,4 +4,4 @@ With this package you will be able to have better visualization of protein cellu
 It also include new data from the paper from Borner and al. 2016 (https://elifesciences.org/articles/16950), which include a dynamic component. 
 You will be able to compare protein cellular location between two conditions, see the protein movement with vectors, etc.
 
-The package contain also an app to have an interactive visualization of all the data from pRolocdata and the data from Borner and al.
+The package contains also an app to have an interactive visualization of all the data from pRolocdata and the data from Borner and al.
