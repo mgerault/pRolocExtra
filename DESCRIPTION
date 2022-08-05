@@ -1,0 +1,27 @@
+Package: pRolocExtra
+Type: Package
+Title: New functions to pRoloc package
+Version: 2.0.0
+Author: Marc-Antoine GERAULT
+Maintainer: Marc-Antoine GERAULT <marco.gerault@gmail.com>
+Description: Contains several functions to generalize the pRoloc functions 
+    to other data, to get better and more synthetic plot visualization.
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.0
+Depends: 
+    R (>= 4.1),
+    ggplot2 (>= 3.3),
+    pRoloc (>= 1.34),
+    pRolocdata (>= 1.32),
+    dplyr (>= 1.0.9)
+Imports: ggplot2, plotly, FactoMineR, stringr, 
+   factoextra, grid, gridExtra, ggpubr, gghighlight, 
+   grDevices, graphics, stats, RColorBrewer, 
+   shiny, shinydashboard, shinycssloaders, shinybusy, 
+   dplyr, Rtsne, tidyr, uwot, nipals, klaR, xgboost, BB,
+   reticulate
+Suggests: pRoloc, 
+          pRolocdata, 
+          MSnbase
