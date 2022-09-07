@@ -362,7 +362,7 @@ AllDatavisuInt <- function(object2, redmet = "PCA", cmet = "svm", ax = c(1,2), I
       message("2. Building the plot")
 
       #creation of the plot : highlight the specifics proteins we chosen + the vectors showing their shifting
-        graph1a <- ggplot2::ggplot(p2_f) +
+        grap2 <- ggplot2::ggplot(p2_f) +
           ggplot2::geom_point(aes(x=Dim1, y=Dim2, fill = markers,
                          size = markers, key = prot), data = p2, colour = alpha("lightblue", 0.7), size = 0.9) +
           ggplot2::geom_point(aes(x=Dim1, y=Dim2, fill = markers,
