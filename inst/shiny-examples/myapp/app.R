@@ -236,13 +236,7 @@ server <- function(input, output, session){
 
   })
 
-  observe({
-    if(input$hili | input$hili_all != 1){
-      updateCheckboxInput(session, "Int", value = FALSE)
-    }
-  })
-
-
+ 
   output$organ <- renderUI({
       selectizeInput("organe", label = "Choose an organelle to visalise the proteins profiles",
                      choices = as.character(unique(fData(data_marker())$markers))[order(as.character(unique(fData(data_marker())$markers)))],
